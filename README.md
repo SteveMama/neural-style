@@ -336,7 +336,7 @@ python neural_style.py --video \
 * `--max_size`: Maximum width or height of the input images. *Default*: `512`
 * `--content_weight`: Weight for the content loss function. *Default*: `5e0`
 * `--style_weight`: Weight for the style loss function. *Default*: `1e4`
-* `--style_scale`: Scales style image *Default*: `1.0`
+* `--style_scale`: Scales style images (global for all style images) *Default*: `1.0`
 * `--tv_weight`: Weight for the total variational loss function. *Default*: `1e-3`
 * `--temporal_weight`: Weight for the temporal loss function. *Default*: `2e2`
 * `--content_layers`: *Space-separated* VGG-19 layer names used for the content image. *Default*: `conv4_2`
