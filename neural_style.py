@@ -80,6 +80,10 @@ def parse_args():
   parser.add_argument('--style_layers', nargs='+', type=str,
     default=['relu1_1', 'relu2_1', 'relu3_1', 'relu4_1', 'relu5_1'],
     help='VGG19 layers used for the style image. (default: %(default)s)')
+
+  parser.add_argument('--style_scale', type=float,
+    default=1.0,
+    help='scale the of style image. (default: %(default)s)')
   
   parser.add_argument('--content_layer_weights', nargs='+', type=float, 
     default=[1.0], 
@@ -635,9 +639,9 @@ def write_video_output(frame, output_img):
   write_image(path, output_img)
 
 def write_image_output(output_img, content_img, style_imgs, init_img):
-  out_dir = os.path.join(args.img_output_dir, args.img_name)
+  out_dir = os.path.join(args.img_output_dir, str(args.max_iterations))
   maybe_make_directory(out_dir)
-  img_path = os.path.join(out_dir, args.img_name+'.png')
+  img_path = os.path.join(out_dir, args.img_output_dir+'-'+str(args.max_iterations)+'.png')
   content_path = os.path.join(out_dir, 'content.png')
   init_path = os.path.join(out_dir, 'init.png')
 
@@ -720,6 +724,7 @@ def get_content_image(content_img):
 
 def get_style_images(content_img):
   _, ch, cw, cd = content_img.shape
+  mx = args.max_size
   style_imgs = []
   for style_fn in args.style_imgs:
     path = os.path.join(args.style_imgs_dir, style_fn)
@@ -727,7 +732,29 @@ def get_style_images(content_img):
     img = cv2.imread(path, cv2.IMREAD_COLOR)
     check_image(img, path)
     img = img.astype(np.float32)
-    img = cv2.resize(img, dsize=(cw, ch), interpolation=cv2.INTER_AREA)
+    sh, sw, sd = img.shape
+
+    # use scale args to resize and tile image
+    scaled_img = cv2.resize(img, dsize=(int(sw*args.style_scale), int(sh*args.style_scale)), interpolation=cv2.INTER_AREA)
+    ssh, ssw, ssd = scaled_img.shape
+    
+    if ssh > ch and ssw > cw:
+      starty = int((ssh-ch)/2)
+      startx = int((ssw-cw)/2)
+      img = scaled_img[starty:starty+ch, startx:startx+cw]
+    elif ssh > ch:
+      starty = int((ssh-ch)/2)
+      img = scaled_img[starty:starty+ch, 0:ssw]
+      if ssw != cw:
+        img = cv2.copyMakeBorder(img,0,0,0,(cw-ssw),cv2.BORDER_REFLECT)
+    elif ssw > cw:
+      startx = int((ssw-cw)/2)
+      img = scaled_img[0:ssh, startx:startx+cw]
+      if ssh != ch:
+        img = cv2.copyMakeBorder(img,0,(ch-ssh),0,0,cv2.BORDER_REFLECT)
+    else:
+      img = cv2.copyMakeBorder(scaled_img,0,(ch-ssh),0,(cw-ssw),cv2.BORDER_REFLECT)
+
     img = preprocess(img)
     style_imgs.append(img)
   return style_imgs
