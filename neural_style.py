@@ -190,6 +190,10 @@ def parse_args():
   parser.add_argument('--content_frame_frmt', type=str, 
     default='frame_{}.ppm',
     help='Filename format of the input content frames.')
+
+  parser.add_argument('--zfill', type=str, 
+    default=4,
+    help='digits in frame count')
   
   parser.add_argument('--backward_optical_flow_frmt', type=str, 
     default='backward_{}_{}.flo',
@@ -634,7 +638,7 @@ def get_optimizer(loss):
   return optimizer
 
 def write_video_output(frame, output_img):
-  fn = args.content_frame_frmt.format(str(frame).zfill(5))
+  fn = args.content_frame_frmt.format(str(frame).zfill(args.zfill))
   path = os.path.join(args.video_output_dir, fn)
   write_image(path, output_img)
 
@@ -699,7 +703,7 @@ def get_init_image(init_type, content_img, style_imgs, frame=None):
     return init_img
 
 def get_content_frame(frame):
-  fn = args.content_frame_frmt.format(str(frame).zfill(5))
+  fn = args.content_frame_frmt.format(str(frame).zfill(args.zfill))
   path = os.path.join(args.video_input_dir, fn)
   img = read_image(path)
   return img
@@ -778,7 +782,7 @@ def get_mask_image(mask_img, width, height):
 def get_prev_frame(frame):
   # previously stylized frame
   prev_frame = frame - 1
-  fn = args.content_frame_frmt.format(str(prev_frame).zfill(5))
+  fn = args.content_frame_frmt.format(str(prev_frame).zfill(args.zfill))
   path = os.path.join(args.video_output_dir, fn)
   img = cv2.imread(path, cv2.IMREAD_COLOR)
   check_image(img, path)
