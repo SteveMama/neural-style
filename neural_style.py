@@ -634,7 +634,7 @@ def get_optimizer(loss):
   return optimizer
 
 def write_video_output(frame, output_img):
-  fn = args.content_frame_frmt.format(str(frame).zfill(4))
+  fn = args.content_frame_frmt.format(str(frame).zfill(5))
   path = os.path.join(args.video_output_dir, fn)
   write_image(path, output_img)
 
@@ -699,7 +699,7 @@ def get_init_image(init_type, content_img, style_imgs, frame=None):
     return init_img
 
 def get_content_frame(frame):
-  fn = args.content_frame_frmt.format(str(frame).zfill(4))
+  fn = args.content_frame_frmt.format(str(frame).zfill(5))
   path = os.path.join(args.video_input_dir, fn)
   img = read_image(path)
   return img
@@ -778,7 +778,7 @@ def get_mask_image(mask_img, width, height):
 def get_prev_frame(frame):
   # previously stylized frame
   prev_frame = frame - 1
-  fn = args.content_frame_frmt.format(str(prev_frame).zfill(4))
+  fn = args.content_frame_frmt.format(str(prev_frame).zfill(5))
   path = os.path.join(args.video_output_dir, fn)
   img = cv2.imread(path, cv2.IMREAD_COLOR)
   check_image(img, path)
