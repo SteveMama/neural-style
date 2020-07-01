@@ -313,6 +313,21 @@ def build_model(input_img):
 
   net['pool5']   = pool_layer('pool5', net['relu5_4'])
 
+  """if args.verbose: print('LAYER GROUP 6')
+  net['conv6_1'] = conv_layer('conv6_1', net['pool5'], W=get_weights(vgg_layers, 28))
+  net['relu6_1'] = relu_layer('relu6_1', net['conv6_1'], b=get_bias(vgg_layers, 28))
+
+  net['conv6_2'] = conv_layer('conv6_2', net['relu6_1'], W=get_weights(vgg_layers, 30))
+  net['relu6_2'] = relu_layer('relu6_2', net['conv6_2'], b=get_bias(vgg_layers, 30))
+
+  net['conv6_3'] = conv_layer('conv6_3', net['relu6_2'], W=get_weights(vgg_layers, 32))
+  net['relu6_3'] = relu_layer('relu6_3', net['conv6_3'], b=get_bias(vgg_layers, 32))
+
+  net['conv6_4'] = conv_layer('conv6_4', net['relu6_3'], W=get_weights(vgg_layers, 34))
+  net['relu6_4'] = relu_layer('relu6_4', net['conv6_4'], b=get_bias(vgg_layers, 34))
+
+  net['pool6']   = pool_layer('pool6', net['relu6_4'])"""
+
   return net
 
 def conv_layer(layer_name, layer_input, W):
