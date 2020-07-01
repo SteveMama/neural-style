@@ -212,11 +212,11 @@ def parse_args():
     help='Previous frames to consider for longterm temporal consistency.')
 
   parser.add_argument('--first_frame_iterations', type=int, 
-    default=2000,
+    default=200,
     help='Maximum number of optimizer iterations of the first frame. (default: %(default)s)')
   
   parser.add_argument('--frame_iterations', type=int, 
-    default=800,
+    default=90,
     help='Maximum number of optimizer iterations for each frame after the first frame. (default: %(default)s)')
 
   args = parser.parse_args()
